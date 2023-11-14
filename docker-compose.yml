@@ -9,6 +9,6 @@ services:
       depends_on:
         - brevetsdb
       environment:
-          MONGODB_HOSTNAME: db
+          DB_HOSTNAME: db
     db:
       image: mongo
