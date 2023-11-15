@@ -25,6 +25,30 @@ client = MongoClient("mongodb://" + os.environ["DB_HOSTNAME"], 27017)
 db = client.mydb
 
 ###
+# Backend functions
+###
+
+def retrieve_data():
+    brevet = db.brevets.find().sort("_id", -1).limit(1)
+
+    for i in brevet:
+        return i
+
+    return None
+
+def set_data(data):
+
+    # I'm being explicit about the data structure here for ease of reading
+    data = {
+        "begin_date": data["begin_date"],
+        "brevet_distance": data["brevet_distance"],
+        "items": data["items"],
+    }
+
+    db.brevets.insert_one(data)
+
+    return True
+###
 # Pages
 ###
 
@@ -72,15 +96,14 @@ def _calc_times():
 
 
 @app.route("/get-calc")
-def retrieve_brevet():
+def get_calc():
     # Inspired by https://stackoverflow.com/questions/62295223/pymongo-query-to-get-the-latest-document-from-the-collection-in-mongodb-using-py
-    brevet = db.brevets.find().sort("_id", -1).limit(1)
-
-    for i in brevet:
+    brevet = retrieve_data()
+    if brevet is not None:
         return flask.jsonify(
-            begin_date=i["begin_date"],
-            brevet_distance=i["brevet_distance"],
-            items=i["items"],
+            begin_date=brevet["begin_date"],
+            brevet_distance=brevet["brevet_distance"],
+            items=brevet["items"],
         )
 
     return json.dumps({"success": False}), 404, {"ContentType": "application/json"}
@@ -90,15 +113,7 @@ def retrieve_brevet():
 def set_brevet():
     data = request.get_json()
 
-    # I'm being explicit about the data structure here for ease of reading
-
-    data = {
-        "begin_date": data["begin_date"],
-        "brevet_distance": data["brevet_distance"],
-        "items": data["items"],
-    }
-
-    db.brevets.insert_one(data)
+    result = set_data(data)
 
     # https://stackoverflow.com/questions/26079754/flask-how-to-return-a-success-status-code-for-ajax-call
     return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
