@@ -7,6 +7,7 @@ Write your tests HERE AND ONLY HERE.
 import nose  # Testing framework
 import logging
 import arrow
+from flask_brevets import retrieve_data, set_data
 from acp_times import open_time, close_time
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
@@ -118,3 +119,23 @@ def test_example_1():
     test_close_time = arrow.get("2023-06-24T21:35:00")
     assert open_time(200, 300, start_time1) == test_open_time
     assert close_time(200, 300, start_time1) == test_close_time
+
+def test_retrieval_empty():
+    # Test the retrival with an empty database
+    assert retrieve_data() == None
+
+def test_insertion():
+    test_data = {
+        "begin_date": "2023-06-24T14:08:00",
+        "brevet_distance": 200,
+        "items": [50, 100,200],
+    }
+
+    assert set_data(test_data)
+    retrieved_data = retrieve_data()
+    retrieved_data = {
+        "begin_date": retrieved_data["begin_date"],
+        "brevet_distance": retrieved_data["brevet_distance"],
+        "items": retrieved_data["items"],
+    }
+    assert retrieved_data == test_data
