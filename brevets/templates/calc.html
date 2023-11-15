@@ -213,6 +213,11 @@
                         post_data.items.push(parseFloat(inputs[i].value))
                      }
                   }
+                  // Check for errors before sending
+                  if (post_data.items.length == 0) {
+                     alert("No distances to save!")
+                     return
+                  }
                   
                   // Post them to the server
                   $.ajax({
