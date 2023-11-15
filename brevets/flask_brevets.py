@@ -29,6 +29,7 @@ db = client.mydb
 ###
 
 def retrieve_data():
+    # Inspired by https://stackoverflow.com/questions/62295223/pymongo-query-to-get-the-latest-document-from-the-collection-in-mongodb-using-py
     brevet = db.brevets.find().sort("_id", -1).limit(1)
 
     for i in brevet:
@@ -46,7 +47,8 @@ def set_data(data):
     }
 
     db.brevets.insert_one(data)
-
+    
+    # Placeholder for error checking
     return True
 ###
 # Pages
@@ -97,7 +99,6 @@ def _calc_times():
 
 @app.route("/get-calc")
 def get_calc():
-    # Inspired by https://stackoverflow.com/questions/62295223/pymongo-query-to-get-the-latest-document-from-the-collection-in-mongodb-using-py
     brevet = retrieve_data()
     if brevet is not None:
         return flask.jsonify(

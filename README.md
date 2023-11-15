@@ -1,6 +1,25 @@
 # UOCIS322 - Project 5 #
 Brevet time calculator with MongoDB!
 
+By Stephen Swanson - sswanso5@uoregon.edu
+
+
+## Here's how it works
+
+If you have either docker-compose or podman-compose (a superior version of docker-compose) installed, first, create your credentials.ini file in the brevet directory, following the skel file.
+
+Then, you can run `podman-compose up` (or `docker-compose up`) to build and run all the necessary containers.
+
+Afterwards, you can visit it at http://localhost:5001
+
+Using it is fairly simple. First, enter your brevet distence, then set the start race time. Lastly, fill out the rows for either miles or kilometers and the gate open and close times will be automatically populated based on the algorithm. You can also use the "Submit" button to store the current set in the database, and the "Display" button will load the most recent set from the database.
+
+The algorithm uses the table described here to calculate the times:
+https://rusa.org/pages/acp-brevet-control-times-calculator
+
+It also takes into account the edge cases on that page. It also will use the final time set by the brevet rules to calculate the final closing time, rather than the algorithm so that it stays consistent.
+
+
 ## Overview
 
 You'll add a storage to your previous project using MongoDB and `docker-compose`.
